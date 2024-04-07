@@ -1,0 +1,67 @@
+systemctl status systemd-networkd-wait-online.service
+systemctl list-dependencies systemd-networkd-wait-online.service --reverse
+
+sudo ip link set wlp3s0 up
+sudo iw dev wlp3s0 scan | grep "SSID"
+sudo iw connect <ssid>
+### OR ###
+wpa_passphrase <ssid> [passphrase read from stdin] >> /etc/wpa_supplicant/wpa_supplicant.conf
+sudo wpa_supplicant -B -D wext -i wlp3s0 -c /etc/wpa_supplicant.conf
+sudo dhclient wlp3s0
+ip addr show wlp3s0
+ip route show
+sudo ip route add default via <192.168.1.254> dev wlp3s0
+
+git pull origin master
+
+flatpak run md.obsidian.Obsidian
+
+iridium-toolkit
+IridiumLive
+CellSearch
+LTE-Tracker
+
+iridium-extractor --multi-frame ~/builds/gr-iridium/examples/bladerf-10msps.conf | ~/Projects/Tekkers/iridium-toolkit/iridium-parser.py -p /dev/stdin /dev/stdout | python3 ~/builds/gr-iridium/udp-for-il.py
+IridiumLive
+
+pnpm init (create package.json file)
+pnpn install -D typescript (D = devDependency)
+tsc --init (create tsconfig.json)
+<specify output folder in tsconfig.json outDir option> automatically creates dist/
+in package.json > scripts > create new script "build": "tsc"
+pnpm build
+node dist/<fileToRun>.js
+
+
+gh repo create
+git add . [use git reset to unstage everything]
+git commit -m "message"
+git push
+
+arduino-cli list boards
+arduino-cli compile --fqbn arduino:avr:uno <sketch dir>
+arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:uno <sketch dir>
+
+
+conda environments can be found in: /home/donny/miniforge/envs/
+
+===================
+FLASH RAK4631 BOARD
+===================
+<double tap reset button>
+sudo cp Meshtastic_firmware_erase.uf2 /dev/sdx
+minicom -b 9600 -D /dev/ttyACM0
+<follow prompts on minicom console>
+C-A x <exit minicom and reset device>
+sudo mount /dev/sdx /mnt/usb
+sudo cp firmware-<device>-<version>.uf2 /mnt/usb
+
+==========================================================================
+
+[16:40:18] donny:FMCW $ avr-gcc -c -O fmcw.c -mmcu=atmega328p
+[16:40:42] donny:FMCW $ avr-gcc -mmcu=atmega328p -o fmcw.elf fmcw.o
+[16:45:28] donny:FMCW $ avr-gcc -Os -DF_CPU=16000000UL -mmcu=atmega328p -c -o fmcw.o fmcw.c
+[16:47:13] donny:FMCW $ avr-gcc -mmcu=atmega328p fmcw.o -o fmcw
+[16:47:40] donny:FMCW $ avr-objcopy -O ihex -R .eeprom fmcw fmcw.hex
+[16:48:03] donny:FMCW $ avrdude -F -V -c arduino -p ATMEGA328P -P /dev/ttyACM0 -b 115200 -U flash:w:fmcw.hex
+
